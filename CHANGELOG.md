@@ -2,6 +2,10 @@
 
 Restored from the merged pull requests and tags (the GitHub releases older than the newest five are deleted by CI; see `.github/workflows/release.yml`). Newest first. Add an entry here in every PR that bumps the version.
 
+## 0.157.0 — 2026-11-24
+
+- New app ID `io.github.shagovalexei.shagoff-commander`, without `cosmic-ext-`; the repository is now `github.com/shagovAlexei/shagoff-commander` (the old address leads there). Settings and tabs move over by themselves, from either earlier ID; the menu entry and its icon are installed under the new name, in System → File Tools
+
 ## 0.156.2 — 2026-11-18
 
 - X11 (Xfce and others): the window has the program's own icon in the taskbar and Alt+Tab, not a generic one (the F3 window too)

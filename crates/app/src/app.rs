@@ -52,7 +52,7 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant, SystemTime};
 
-pub const APP_ID: &str = "io.github.shagovAlexei.cosmic-ext-shagoff-commander";
+pub const APP_ID: &str = "io.github.shagovalexei.shagoff-commander";
 // ponytail: list height is guessed until the scrollable reports its bounds (it does on the first event).
 const FALLBACK_LIST_H: f32 = 400.0;
 const FALLBACK_LIST_W: f32 = 500.0;

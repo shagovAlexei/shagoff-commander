@@ -3,11 +3,11 @@ resolver = "3"
 members = ["crates/core", "crates/app"]
 
 [workspace.package]
-version = "0.156.2"
+version = "0.157.0"
 edition = "2024"
 authors = ["Shagov Alexei <shagov.alexei@gmail.com>"]
 license = "GPL-3.0-only"
-repository = "https://github.com/shagovAlexei/cosmic-shagoff-commander"
+repository = "https://github.com/shagovAlexei/shagoff-commander"
 
 # Debug info: the dependencies' (libcosmic, iced, wgpu…) is most of `target/debug` (11 of 20 GB)
 # and of the link time, and nobody steps into them; ours keeps lines for backtraces.

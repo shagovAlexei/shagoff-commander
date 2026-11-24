@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.shagovAlexei.cosmic-ext-shagoff-commander</id>
+  <id>io.github.shagovalexei.shagoff-commander</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-only</project_license>
   <name>Shagoff Commander</name>
   <summary>Dual-pane file manager in the spirit of Total Commander</summary>
   <developer id="io.github.shagovalexei"><name>Shagov Alexei</name></developer>
-  <url type="homepage">https://github.com/shagovAlexei/cosmic-shagoff-commander</url>
+  <url type="homepage">https://github.com/shagovAlexei/shagoff-commander</url>
   <description>
     <p>A dual-pane file manager in the spirit of Total Commander, built with libcosmic for the COSMIC desktop. Total Commander keys and layout: F3–F8, marking with Insert and Space, quick search, tabs, history and hotlist.</p>
     <ul>
@@ -21,36 +21,36 @@
   </description>
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/classic.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/classic.png</image>
       <caption>Classic look: toolbar, drive drop-down, two panels with tabs</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/light.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/light.png</image>
       <caption>Classic look in the light theme</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/modern.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/modern.png</image>
       <caption>Modern look: drive buttons, breadcrumbs, panels as cards</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/find.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/find.png</image>
       <caption>Find files</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/pack.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/pack.png</image>
       <caption>Packing files into an archive</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/terminal.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/terminal.png</image>
       <caption>Built-in terminal under the panels</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/shagovAlexei/cosmic-shagoff-commander/main/res/screenshots/clouds.png</image>
+      <image>https://raw.githubusercontent.com/shagovAlexei/shagoff-commander/main/res/screenshots/clouds.png</image>
       <caption>Cloud accounts through rclone</caption>
     </screenshot>
   </screenshots>
-  <url type="bugtracker">https://github.com/shagovAlexei/cosmic-shagoff-commander/issues</url>
-  <url type="vcs-browser">https://github.com/shagovAlexei/cosmic-shagoff-commander</url>
+  <url type="bugtracker">https://github.com/shagovAlexei/shagoff-commander/issues</url>
+  <url type="vcs-browser">https://github.com/shagovAlexei/shagoff-commander</url>
   <url type="donation">https://donate.stripe.com/6oU28s8Ff7cR1342J967S00</url>
   <content_rating type="oars-1.1"/>
   <branding>
@@ -58,6 +58,9 @@
     <color type="primary" scheme_preference="dark">#1d4a57</color>
   </branding>
   <releases>
+    <release version="0.157.0" date="2026-11-24">
+      <description><p>New app ID io.github.shagovalexei.shagoff-commander and repository name shagoff-commander; settings and tabs move over by themselves.</p></description>
+    </release>
     <release version="0.156.2" date="2026-11-18">
       <description><p>X11: the program's own icon in the taskbar.</p></description>
     </release>
@@ -141,8 +144,9 @@
     </release>
   </releases>
   <replaces>
+    <id>io.github.shagovAlexei.cosmic-ext-shagoff-commander</id>
     <id>io.github.shagovAlexei.cosmic-shagoff-commander</id>
   </replaces>
-  <launchable type="desktop-id">io.github.shagovAlexei.cosmic-ext-shagoff-commander.desktop</launchable>
+  <launchable type="desktop-id">io.github.shagovalexei.shagoff-commander.desktop</launchable>
   <provides><binary>shagoff-commander</binary></provides>
 </component>

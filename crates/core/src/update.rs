@@ -3,9 +3,9 @@
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-pub const REPO: &str = "https://github.com/shagovAlexei/cosmic-shagoff-commander";
+pub const REPO: &str = "https://github.com/shagovAlexei/shagoff-commander";
 pub const LATEST_API: &str =
-    "https://api.github.com/repos/shagovAlexei/cosmic-shagoff-commander/releases/latest";
+    "https://api.github.com/repos/shagovAlexei/shagoff-commander/releases/latest";
 
 /// What a check found.
 #[derive(Clone, Debug, PartialEq, Eq)]

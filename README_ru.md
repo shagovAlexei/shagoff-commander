@@ -107,7 +107,7 @@
 
 ## Установка
 
-К каждому [релизу](https://github.com/shagovAlexei/cosmic-shagoff-commander/releases) приложен `.deb` для Pop!_OS 24.04 / Ubuntu 22.04 и новее (Mint 21+, Debian 12+; собран под glibc 2.35):
+К каждому [релизу](https://github.com/shagovAlexei/shagoff-commander/releases) приложен `.deb` для Pop!_OS 24.04 / Ubuntu 22.04 и новее (Mint 21+, Debian 12+; собран под glibc 2.35):
 
 ```sh
 sudo apt install ./shagoff-commander_*_amd64.deb
@@ -119,7 +119,7 @@ Fedora / openSUSE: `.rpm` из того же релиза (`sudo dnf install ./s
 Flatpak — из репозитория COSMIC (в Pop!_OS 24.04 он уже есть; в других системах сначала `flatpak remote-add --if-not-exists --user cosmic https://apt.pop-os.org/cosmic/cosmic.flatpakrepo`):
 
 ```sh
-flatpak install --user cosmic io.github.shagovAlexei.cosmic-ext-shagoff-commander
+flatpak install --user cosmic io.github.shagovalexei.shagoff-commander
 ```
 
 Файловому менеджеру нужна вся система, поэтому этот flatpak — не песочница: он видит все файлы и запускает все программы («Открыть с помощью», терминалы, монтирование, облака, командную строку) на хосте. `/etc`, `/usr` и подобные открываются как `/run/host/etc`, `/run/host/usr` (внутри flatpak обычные — его среды выполнения). Настройки, вкладки и корзина те же, что у `.deb`; обновляет его flatpak, своя проверка обновлений там выключена.
@@ -129,15 +129,15 @@ flatpak install --user cosmic io.github.shagovAlexei.cosmic-ext-shagoff-commande
 Скачать свежий `.deb` и `SHA256SUMS` через `curl`, проверить хеш и поставить, только если он совпал (`--ignore-missing` пропускает `.rpm` из списка):
 
 ```sh
-v=$(curl -sLI -o /dev/null -w '%{url_effective}' https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/latest | sed 's|.*/v||')
-cd ~/Downloads && B=https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/download/v$v
+v=$(curl -sLI -o /dev/null -w '%{url_effective}' https://github.com/shagovAlexei/shagoff-commander/releases/latest | sed 's|.*/v||')
+cd ~/Downloads && B=https://github.com/shagovAlexei/shagoff-commander/releases/download/v$v
 curl -LO "$B/shagoff-commander_${v}_amd64.deb" -LO "$B/SHA256SUMS"
 sha256sum -c --ignore-missing SHA256SUMS && sudo apt install ./shagoff-commander_${v}_amd64.deb
 ```
 
-Аттестацию сборки тоже можно проверить, `gh` версии 2.49 и новее: `gh attestation verify ФАЙЛ.deb --repo shagovAlexei/cosmic-shagoff-commander`.
+Аттестацию сборки тоже можно проверить, `gh` версии 2.49 и новее: `gh attestation verify ФАЙЛ.deb --repo shagovAlexei/shagoff-commander`.
 С 0.130.1 `SHA256SUMS` ещё и подписан ключом [minisign](https://jedisct1.github.io/minisign/) автора, который хранится не на GitHub (`SHA256SUMS.minisig`; открытый ключ — [`res/minisign.pub`](res/minisign.pub)): `minisign -Vm SHA256SUMS -p minisign.pub`.
-Единственное официальное место загрузки — [страница релизов](https://github.com/shagovAlexei/cosmic-shagoff-commander/releases).
+Единственное официальное место загрузки — [страница релизов](https://github.com/shagovAlexei/shagoff-commander/releases).
 
 При каждом запуске программа проверяет, нет ли новой версии, и предлагает её в окне («Обновить» / «Позже» / «Пропустить эту версию»); отключается в Настройки → «Проверять обновления при запуске». Обновление скачивает `SHA256SUMS` релиза и его подпись (только с этого репозитория) в `~/.cache/shagoff-commander` и ничего не ставит, если подпись не от ключа автора, встроенного в программу; затем `.deb` и выполняет `sha256sum -c --strict`. Если хеш не совпал, пакет удаляется, ничего не ставится, в окне видно, что не сошлось. Если совпал, `pkexec` запускает от root сценарий: он копирует пакет в папку, куда пишет только root, ещё раз сверяет там хеш и ставит эту копию через `apt-get install` (система спросит пароль через polkit). После установки появляется сообщение с просьбой перезапустить программу. Имя пакета из `SHA256SUMS` и тег релиза проверяются на допустимый вид, чтобы в адрес скачивания нельзя было подставить путь.
 
@@ -145,15 +145,15 @@ sha256sum -c --ignore-missing SHA256SUMS && sudo apt install ./shagoff-commander
 
 Какая версия стоит: **Справка → О программе** или `dpkg -s shagoff-commander | grep Version`.
 Кнопка **Проверить обновления** там спрашивает у GitHub последний релиз (только по нажатию).
-Самая новая — на [странице релизов](https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/latest).
+Самая новая — на [странице релизов](https://github.com/shagovAlexei/shagoff-commander/releases/latest).
 
 Поставьте новый `.deb` поверх старого — настройки, вкладки и история сохранятся (они лежат в
 `~/.config/cosmic/` и `~/.local/state/cosmic/`):
 
 ```sh
 # скачать последний релиз, проверить хеш, поставить, только если он совпал
-v=$(curl -sLI -o /dev/null -w '%{url_effective}' https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/latest | sed 's|.*/v||')
-cd ~/Downloads && B=https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/download/v$v
+v=$(curl -sLI -o /dev/null -w '%{url_effective}' https://github.com/shagovAlexei/shagoff-commander/releases/latest | sed 's|.*/v||')
+cd ~/Downloads && B=https://github.com/shagovAlexei/shagoff-commander/releases/download/v$v
 curl -LO "$B/shagoff-commander_${v}_amd64.deb" -LO "$B/SHA256SUMS"
 sha256sum -c --ignore-missing SHA256SUMS && sudo apt install ./shagoff-commander_${v}_amd64.deb
 

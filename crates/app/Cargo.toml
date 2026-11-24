@@ -45,12 +45,12 @@ features = ["tokio", "winit", "wayland", "wgpu", "multi-window", "markdown"]
 # `just rpm`. Paths: from this crate's dir; target/… from the workspace's target dir.
 [package.metadata.generate-rpm]
 summary = "Total Commander-style dual-pane file manager for COSMIC"
-url = "https://github.com/shagovAlexei/cosmic-shagoff-commander"
+url = "https://github.com/shagovAlexei/shagoff-commander"
 assets = [
     { source = "target/release/shagoff-commander", dest = "/usr/bin/shagoff-commander", mode = "755" },
-    { source = "../../res/io.github.shagovAlexei.cosmic-ext-shagoff-commander.desktop", dest = "/usr/share/applications/io.github.shagovAlexei.cosmic-ext-shagoff-commander.desktop", mode = "644" },
-    { source = "../../res/io.github.shagovAlexei.cosmic-ext-shagoff-commander.metainfo.xml", dest = "/usr/share/metainfo/io.github.shagovAlexei.cosmic-ext-shagoff-commander.metainfo.xml", mode = "644" },
-    { source = "../../res/icons/io.github.shagovAlexei.cosmic-ext-shagoff-commander.svg", dest = "/usr/share/icons/hicolor/scalable/apps/io.github.shagovAlexei.cosmic-ext-shagoff-commander.svg", mode = "644" },
+    { source = "../../res/io.github.shagovalexei.shagoff-commander.desktop", dest = "/usr/share/applications/io.github.shagovalexei.shagoff-commander.desktop", mode = "644" },
+    { source = "../../res/io.github.shagovalexei.shagoff-commander.metainfo.xml", dest = "/usr/share/metainfo/io.github.shagovalexei.shagoff-commander.metainfo.xml", mode = "644" },
+    { source = "../../res/icons/io.github.shagovalexei.shagoff-commander.svg", dest = "/usr/share/icons/hicolor/scalable/apps/io.github.shagovalexei.shagoff-commander.svg", mode = "644" },
     { source = "../../res/apparmor/usr.bin.shagoff-commander", dest = "/usr/share/doc/shagoff-commander/apparmor/usr.bin.shagoff-commander", mode = "644", doc = true },
     { source = "target/man/shagoff-commander.1.gz", dest = "/usr/share/man/man1/shagoff-commander.1.gz", mode = "644", doc = true },
 ]

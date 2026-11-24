@@ -9,7 +9,7 @@ use cosmic::widget::{self, settings};
 use cosmic::{Element, theme};
 use shagoff_core::archive::Format;
 
-pub const REPO: &str = "https://github.com/shagovAlexei/cosmic-shagoff-commander";
+pub const REPO: &str = "https://github.com/shagovAlexei/shagoff-commander";
 
 /// Stripe Payment Link for a cloud key; the key is mailed by hand (`just access-key`).
 pub const BUY_URL: &str = "https://buy.stripe.com/3cI00kg7H9kZ7rscjJ67S06";
