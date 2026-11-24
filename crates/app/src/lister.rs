@@ -261,6 +261,8 @@ pub struct Lister {
     origin: Option<(u64, f32, Option<usize>)>,
     /// `Mode::Markdown`: the file parsed (when the mode is first shown) and the height it takes.
     md: Option<Vec<widget::markdown::Item>>,
+    /// The text of each selectable block of `md`, in order: `sel` rows are these.
+    md_texts: Vec<String>,
     pub md_h: f32,
 }
 
@@ -320,6 +322,7 @@ impl Lister {
             slide: None,
             origin: None,
             md: None,
+            md_texts: Vec::new(),
             md_h: 0.0,
             query: String::new(),
             searching: false,
@@ -503,7 +506,9 @@ impl Lister {
             && let Some((doc, text)) = self.text()
         {
             let s = String::from_utf8_lossy(text.bytes(doc));
-            self.md = Some(widget::markdown::parse(&s).collect());
+            let items: Vec<_> = widget::markdown::parse(&s).collect();
+            self.md_texts = md_texts(&items, self.size);
+            self.md = Some(items);
         }
     }
 
@@ -786,6 +791,15 @@ impl Lister {
 
     /// Ctrl+A: every row.
     pub fn select_all(&mut self) {
+        if self.mode == Mode::Markdown {
+            let last = self.md_texts.len().saturating_sub(1);
+            let len = self.md_texts.last().map_or(0, |t| t.chars().count());
+            self.sel = Some(lister::Selection {
+                anchor: (0, 0),
+                head: (last, len),
+            });
+            return;
+        }
         let Some((doc, txt)) = self.text() else {
             return;
         };
@@ -805,6 +819,10 @@ impl Lister {
     // ponytail: wrapped rows are joined with newlines too; join a line's parts if it matters.
     pub fn selected_text(&self) -> Option<String> {
         let sel = self.sel.filter(|s| !s.is_empty())?;
+        if self.mode == Mode::Markdown {
+            let text = |i: usize| self.md_texts.get(i).cloned().unwrap_or_default();
+            return Some(sel.text(text));
+        }
         let (doc, txt) = self.text()?;
         Some(sel.text(|i| self.row_text(doc, txt, i)))
     }
@@ -1156,12 +1174,139 @@ fn coloured(
         .into()
 }
 
-/// `Mode::Markdown`: the file formatted, scrolled as a whole; a link opens in the browser.
-fn markdown(l: &Lister) -> Element<'_, Message> {
+/// What a link click in the formatted Markdown does. Only what a browser opens: a relative link
+/// is a file of the repo, not on the web; a file:// or an app's own scheme from a file read is
+/// not run.
+fn md_link(url: String) -> Message {
+    let lower = url.to_ascii_lowercase();
+    if ["http://", "https://", "mailto:"]
+        .iter()
+        .any(|p| lower.starts_with(p))
+    {
+        Message::OpenUrl(url)
+    } else {
+        Message::ListerWake // a redraw: nothing to do
+    }
+}
+
+/// Draws headings, paragraphs (list items and quotes are made of them) and code lines as
+/// selectable blocks, numbered in the order they are made; `texts` gets each one's text (the
+/// same walk at parse time gives `Lister::md_texts`). Tables and image captions stay iced's.
+struct MdViewer {
+    block: std::cell::Cell<usize>,
+    texts: std::cell::RefCell<Vec<String>>,
+    sel: Option<lister::Selection>,
+    dragging: bool,
+}
+
+impl MdViewer {
+    fn new(sel: Option<lister::Selection>, dragging: bool) -> Self {
+        Self {
+            block: Default::default(),
+            texts: Default::default(),
+            sel,
+            dragging,
+        }
+    }
+
+    fn leaf(
+        &self,
+        spans: std::sync::Arc<[cosmic::iced::core::text::Span<'static, String>]>,
+        size: cosmic::iced::Pixels,
+    ) -> crate::md_text::MdText {
+        let block = self.block.replace(self.block.get() + 1);
+        let text = crate::md_text::plain(&spans);
+        let sel = (self.sel).and_then(|s| s.in_row(block, text.chars().count()));
+        self.texts.borrow_mut().push(text);
+        crate::md_text::md_text(spans, size, block, sel, self.dragging, md_link)
+    }
+}
+
+impl<'a> widget::markdown::Viewer<'a, Message, cosmic::Theme, cosmic::Renderer> for MdViewer {
+    fn on_link_click(url: String) -> Message {
+        md_link(url)
+    }
+
+    fn heading(
+        &self,
+        settings: widget::markdown::Settings,
+        level: &'a widget::markdown::HeadingLevel,
+        text: &'a widget::markdown::Text,
+        index: usize,
+    ) -> Element<'a, Message> {
+        use widget::markdown::HeadingLevel as H;
+        let size = match level {
+            H::H1 => settings.h1_size,
+            H::H2 => settings.h2_size,
+            H::H3 => settings.h3_size,
+            H::H4 => settings.h4_size,
+            H::H5 => settings.h5_size,
+            H::H6 => settings.h6_size,
+        };
+        let top = if index > 0 {
+            settings.text_size.0 / 2.0
+        } else {
+            0.0
+        };
+        widget::container(self.leaf(text.spans(settings.style), size))
+            .padding(cosmic::iced::Padding::ZERO.top(top))
+            .into()
+    }
+
+    fn paragraph(
+        &self,
+        settings: widget::markdown::Settings,
+        text: &widget::markdown::Text,
+    ) -> Element<'a, Message> {
+        self.leaf(text.spans(settings.style), settings.text_size)
+            .into()
+    }
+
+    fn code_block(
+        &self,
+        settings: widget::markdown::Settings,
+        _language: Option<&'a str>,
+        _code: &'a str,
+        lines: &'a [widget::markdown::Text],
+    ) -> Element<'a, Message> {
+        use cosmic::iced::widget::scrollable;
+        let code = settings.code_size;
+        // iced gives each span the text font: code lines were proportional.
+        let font = settings.style.code_block_font;
+        let rows = lines.iter().map(|line| {
+            let spans = line.spans(settings.style);
+            let spans = spans.iter().map(|s| s.clone().font(font)).collect();
+            self.leaf(spans, code).into()
+        });
+        let bar = scrollable::Scrollbar::default()
+            .width(code.0 / 2.0)
+            .scroller_width(code.0 / 2.0);
+        let page =
+            widget::container(cosmic::iced::widget::Column::with_children(rows)).padding(code.0);
+        widget::container(
+            cosmic::iced::widget::scrollable(page)
+                .direction(scrollable::Direction::Horizontal(bar)),
+        )
+        .width(Length::Fill)
+        .padding(code.0 / 4.0)
+        .class(<cosmic::Theme as widget::markdown::Catalog>::code_block())
+        .into()
+    }
+}
+
+/// The text of each selectable block of the page, in order (see `MdViewer`).
+fn md_texts(items: &[widget::markdown::Item], size: u16) -> Vec<String> {
+    let viewer = MdViewer::new(None, false);
+    drop(widget::markdown::view_with(
+        items,
+        md_settings(size),
+        &viewer,
+    ));
+    viewer.texts.into_inner()
+}
+
+fn md_settings(size: u16) -> widget::markdown::Settings {
     use widget::markdown;
-    let Some(items) = &l.md else {
-        return widget::Space::new().into();
-    };
     let theme = cosmic::theme::active();
     let c = theme.cosmic();
     let palette = cosmic::iced::theme::Palette {
@@ -1176,23 +1321,22 @@ fn markdown(l: &Lister) -> Element<'_, Message> {
     style.font = cosmic::font::default();
     style.code_block_font = cosmic::font::mono();
     style.inline_code_font = cosmic::font::mono();
-    let mut settings = markdown::Settings::with_text_size(l.size, style);
+    let mut settings = markdown::Settings::with_text_size(size, style);
     settings.code_size = settings.text_size * 0.9; // 0.75 by default: hard to read
+    settings
+}
 
-    let page = markdown::view(items, settings).map(|url: String| {
-        // Only what a browser opens: a relative link is a file of the repo, not on the web.
-        // http(s) and mail only: a file:// or an app's own scheme from a file read is not run.
-        let lower = url.to_ascii_lowercase();
-        if ["http://", "https://", "mailto:"]
-            .iter()
-            .any(|p| lower.starts_with(p))
-        {
-            Message::OpenUrl(url)
-        } else {
-            Message::ListerWake // a redraw: nothing to do
-        }
-    });
-    widget::scrollable(widget::container(page).padding([0, 12, 12, 0]))
+/// `Mode::Markdown`: the file formatted, scrolled as a whole; a link opens in the browser; its
+/// text is selected with the mouse (across blocks), Ctrl+A / Ctrl+C as in the text view.
+fn markdown(l: &Lister) -> Element<'_, Message> {
+    let Some(items) = &l.md else {
+        return widget::Space::new().into();
+    };
+    let viewer = MdViewer::new(l.sel, l.dragging);
+    let page = widget::markdown::view_with(items, md_settings(l.size), &viewer);
+    let page = widget::mouse_area(widget::container(page).padding([0, 12, 12, 0]))
+        .on_release(Message::ListerRelease);
+    widget::scrollable(page)
         .id(l.scroll.clone())
         .on_scroll(|v| {
             Message::ListerMdScrolled(
@@ -1513,6 +1657,33 @@ mod tests {
         l.set_mode(Mode::Hex);
         assert_eq!(l.mode, Mode::Hex);
         assert_eq!(l.rows(), 1);
+    }
+
+    #[test]
+    fn markdown_text_is_selected_across_blocks_and_copied() {
+        let mut l = named(
+            "README.md",
+            "# Title\n\nSome *bold* text\n\n- item\n\n```\nlet a = 1;\nlet b;\n```\n",
+        );
+        assert_eq!(l.mode, Mode::Markdown);
+        assert_eq!(
+            l.md_texts,
+            ["Title", "Some bold text", "item", "let a = 1;", "let b;"]
+        );
+        assert_eq!(l.selected_text(), None);
+        l.select_all();
+        assert_eq!(
+            l.selected_text().as_deref(),
+            Some("Title\nSome bold text\nitem\nlet a = 1;\nlet b;")
+        );
+        // From "bold" in the paragraph to the end of "item": dragged backwards.
+        l.sel = Some(lister::Selection {
+            anchor: (2, 4),
+            head: (1, 5),
+        });
+        assert_eq!(l.selected_text().as_deref(), Some("bold text\nitem"));
+        l.set_mode(Mode::Text);
+        assert_eq!(l.sel, None);
     }
 
     #[test]

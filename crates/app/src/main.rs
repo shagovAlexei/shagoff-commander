@@ -14,6 +14,7 @@ mod i18n;
 mod jobs;
 mod keymap;
 mod lister;
+mod md_text;
 mod menu;
 mod term;
 mod thumbs;

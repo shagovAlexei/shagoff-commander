@@ -2801,3 +2801,39 @@ ls ~/.config/cosmic ~/.local/state/cosmic | grep -i shagoff   # сейчас: io
 
 Уборка: `rm -rf ~/.config/cosmic ~/.local/state/cosmic && mv ~/cfg-cosmic-backup ~/.config/cosmic && mv ~/state-cosmic-backup ~/.local/state/cosmic` — вернёт прежние каталоги, программа при следующем запуске перенесёт их снова.
 
+### Выделение в F3 → Markdown (0.158.0)
+
+Подготовка:
+```sh
+mkdir -p /tmp/mdsel && cat > /tmp/mdsel/README.md <<'MD'
+# Shagoff Commander
+
+A dual-pane file manager with **bold** words, `inline code` and a [link](https://example.com).
+
+- first item of the list
+- second item
+
+```
+just verify
+cargo run -p shagoff-commander
+```
+MD
+```
+Шаги и что должно быть:
+1. Панель в `/tmp/mdsel`, курсор на `README.md`, F3.
+- [ ] Открыто оформленным (кнопка «Markdown (5)» нажата); строки в сером блоке кода — моноширинным шрифтом.
+2. Нажать мышью на слове «dual-pane» и протянуть до середины «first item».
+- [ ] Подсвечено от точки нажатия до точки отпускания, через конец абзаца в пункт списка; у `inline code` подсветка видна поверх его тёмного фона.
+3. Ctrl+C, вставить в любой редактор.
+- [ ] Ровно выделенный текст, абзац и пункт — с новой строки; в строке состояния «Скопировано …».
+4. Shift+щелчок на «cargo» в блоке кода.
+- [ ] Выделение продлилось до этого места.
+5. Ctrl+A, Ctrl+C, вставить.
+- [ ] Весь текст: заголовок, абзац, оба пункта, обе строки кода, каждое с новой строки.
+6. Щелчок по ссылке «link» (без протягивания).
+- [ ] Открывается браузер с example.com. Протянуть с неё — выделяет, браузер не открывается.
+7. Клавиша 1 (Текст), снова 5.
+- [ ] Выделение снято.
+
+Уборка: `rm -r /tmp/mdsel`.
+

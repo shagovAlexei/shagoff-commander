@@ -1066,6 +1066,9 @@ pub enum Message {
     ListerPointer(f32, f32),
     ListerPress,
     ListerRelease,
+    /// F3 Markdown: the button down on block, char (Shift: extends); dragged over block, char.
+    ListerMdPress(usize, usize),
+    ListerMdDrag(usize, usize),
     ListerPointerLeft,
     /// Comes instead of the second release.
     ListerDoubleClick,
