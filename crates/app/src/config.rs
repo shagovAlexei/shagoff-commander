@@ -611,10 +611,15 @@ impl Default for SyncPrefs {
     }
 }
 
-/// The APP_ID before 0.138.0 (the COSMIC trademark policy keeps `cosmic-` for System76's own).
-const OLD_APP_ID: &str = "io.github.shagovAlexei.cosmic-shagoff-commander";
+/// Earlier APP_IDs, newest first: before 0.157.0 (`cosmic-ext-`, the repo was renamed too) and
+/// before 0.138.0 (the COSMIC trademark policy keeps `cosmic-` for System76's own).
+const OLD_APP_IDS: [&str; 2] = [
+    "io.github.shagovAlexei.cosmic-ext-shagoff-commander",
+    "io.github.shagovAlexei.cosmic-shagoff-commander",
+];
 
-/// Settings and tabs saved under the old APP_ID move to the new one (once, before they are read).
+/// Settings and tabs saved under an old APP_ID move to the new one (once, before they are read):
+/// the newest there is wins, the next never moves over it.
 pub fn move_old_dirs() {
     let home = std::env::home_dir().unwrap_or_default();
     for (var, default) in [
@@ -624,12 +629,14 @@ pub fn move_old_dirs() {
         let root = (std::env::var_os(var).map(std::path::PathBuf::from))
             .filter(|p| p.is_absolute())
             .unwrap_or_else(|| home.join(default));
-        if shagoff_core::session::move_app_dir(&root, OLD_APP_ID, crate::app::APP_ID) {
-            log::info!(
-                "moved {OLD_APP_ID} to {} in {}",
-                crate::app::APP_ID,
-                root.display()
-            );
+        for old in OLD_APP_IDS {
+            if shagoff_core::session::move_app_dir(&root, old, crate::app::APP_ID) {
+                log::info!(
+                    "moved {old} to {} in {}",
+                    crate::app::APP_ID,
+                    root.display()
+                );
+            }
         }
     }
 }

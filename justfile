@@ -1,5 +1,5 @@
 name := 'shagoff-commander'
-appid := 'io.github.shagovAlexei.cosmic-ext-shagoff-commander'
+appid := 'io.github.shagovalexei.shagoff-commander'
 prefix := '/usr'
 # Staging root for packaging: `just rootdir=pkg install` puts files under pkg/usr/…
 rootdir := ''
@@ -55,7 +55,7 @@ deb: (build-release '--locked')
     printf '%s\n' \
         'Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/' \
         'Upstream-Name: {{name}}' \
-        'Source: https://github.com/shagovAlexei/cosmic-shagoff-commander' \
+        'Source: https://github.com/shagovAlexei/shagoff-commander' \
         '' 'Files: *' 'Copyright: 2026 Shagov Alexei <shagov.alexei@gmail.com>' 'License: GPL-3.0-only' \
         ' On Debian systems the full text is in /usr/share/common-licenses/GPL-3.' > "$doc/copyright"
     printf '%s (%s) unstable; urgency=medium\n\n  * Release %s, see the GitHub releases.\n\n -- Shagov Alexei <shagov.alexei@gmail.com>  %s\n' \
@@ -75,7 +75,7 @@ deb: (build-release '--locked')
     Suggests: rclone
     Section: utils
     Priority: optional
-    Homepage: https://github.com/shagovAlexei/cosmic-shagoff-commander
+    Homepage: https://github.com/shagovAlexei/shagoff-commander
     Description: Total Commander-style dual-pane file manager for COSMIC
      Two panels, tabs, F-key operations, archives as folders, file search,
      directory sync and compare, network mounts; keys as in Total Commander.
@@ -96,7 +96,7 @@ rpm: (build-release '--locked')
 sign-release tag key='~/.config/minisign/shagoff.key':
     #!/usr/bin/env bash
     set -euo pipefail
-    repo=shagovAlexei/cosmic-shagoff-commander
+    repo=shagovAlexei/shagoff-commander
     test "$(git rev-parse '{{tag}}^{commit}')" = "$(gh api "repos/$repo/commits/{{tag}}" --jq .sha)"
     d=$(mktemp -d); trap 'rm -rf "$d"' EXIT
     gh release download '{{tag}}' -R "$repo" -p SHA256SUMS -p '*.deb' -p '*.rpm' -D "$d"

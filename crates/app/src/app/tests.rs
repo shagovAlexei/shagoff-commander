@@ -7632,9 +7632,7 @@ fn find_duplicates_needs_a_box_groups_its_results_and_is_remembered() {
 /// The flatpak and the stores show the version from the metainfo's newest `<release>`.
 #[test]
 fn regression_metainfo_has_this_release() {
-    let xml = include_str!(
-        "../../../../res/io.github.shagovAlexei.cosmic-ext-shagoff-commander.metainfo.xml"
-    );
+    let xml = include_str!("../../../../res/io.github.shagovalexei.shagoff-commander.metainfo.xml");
     let first = xml
         .split("<release version=\"")
         .nth(1)

@@ -224,7 +224,7 @@
 
 ### Фаза 6: F3/F4, диски, автообновление, конфиг
 - [x] Вкладки обеих панелей и активная панель восстанавливаются после перезапуска; удалённый каталог → ближайший родитель
-- [x] `~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander/v1/show_hidden` (`true`/`false`) — правка файла на лету показывает/прячет скрытые
+- [x] `~/.config/cosmic/io.github.shagovalexei.shagoff-commander/v1/show_hidden` (`true`/`false`) — правка файла на лету показывает/прячет скрытые
 - [x] Ctrl+H — скрытые во всех вкладках обеих панелей; после перезапуска сохраняется
 - [x] Ctrl+W на последней вкладке: по умолчанию ничего; в файле `last_tab_close` написать `Home` → переход в домашний (или в `home_dir`, например `Some("/tmp")`)
 - [x] F3 — файл открывается программой по умолчанию; F4 — cosmic-edit; на каталоге и `..` ничего; кнопки F3/F4 внизу работают
@@ -1149,7 +1149,7 @@
 
 ### Ctrl+D после правки конфига снаружи (132)
 
-- [x] Ctrl+D, курсор на втором пункте; в другом окне добавить пункт в начало `~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander/v1/hotlist` — список в диалоге обновился, курсор на том же пункте; Delete — удалён он
+- [x] Ctrl+D, курсор на втором пункте; в другом окне добавить пункт в начало `~/.config/cosmic/io.github.shagovalexei.shagoff-commander/v1/hotlist` — список в диалоге обновился, курсор на том же пункте; Delete — удалён он
 
 ### Избранное: папка с именем не в UTF-8 (133)
 
@@ -1173,7 +1173,7 @@
 
 ### Ошибка записи настроек видна (137)
 
-- [x] `chmod a-w ~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander/v1`; Ctrl+H — скрытые переключились, карточка «Настройки не сохранены: …»; то же для ширины столбцов, Ctrl+D «Добавить», настроек (Ctrl+,). После — `chmod u+w` того же каталога
+- [x] `chmod a-w ~/.config/cosmic/io.github.shagovalexei.shagoff-commander/v1`; Ctrl+H — скрытые переключились, карточка «Настройки не сохранены: …»; то же для ширины столбцов, Ctrl+D «Добавить», настроек (Ctrl+,). После — `chmod u+w` того же каталога
 
 ### F3 / F4: причина, почему файл не открыть (138)
 
@@ -1942,7 +1942,7 @@ mkdir -p /tmp/bomb && cd /tmp/bomb && head -c 20M /dev/zero > zeros && zip -q bi
 - [x] Пароль спрашивает polkit для `/bin/sh` (это сценарий установки), после ввода — «перезапустите программу»; `dpkg -s shagoff-commander | grep Version` показывает новую версию.
 2. Проверка подписи вручную (на любом выпуске с 0.130.1):
    ```sh
-   cd /tmp && v=0.130.1 && B=https://github.com/shagovAlexei/cosmic-shagoff-commander/releases/download/v$v
+   cd /tmp && v=0.130.1 && B=https://github.com/shagovAlexei/shagoff-commander/releases/download/v$v
    curl -sLO $B/SHA256SUMS -sLO $B/SHA256SUMS.minisig
    minisign -Vm SHA256SUMS -p ~/Projects/cosmic/cosmic-shagoff_commander/res/minisign.pub
    echo x >> SHA256SUMS && minisign -Vm SHA256SUMS -p ~/Projects/cosmic/cosmic-shagoff_commander/res/minisign.pub
@@ -2262,7 +2262,7 @@ mkdir -p /tmp/fp && echo text > /tmp/fp/a.txt && printf '\x7fELF' > /tmp/fp/bin
 ```
 
 Шаги:
-1. `flatpak run io.github.shagovAlexei.cosmic-ext-shagoff-commander`.
+1. `flatpak run io.github.shagovalexei.shagoff-commander`.
 - [ ] Окно открылось с теми же настройками и вкладками, что у установленного .deb; иконки файлов и кнопок на месте.
 - [ ] В строке состояния у файлов владелец — имя, а не число (`/etc/passwd` хоста).
 - [ ] Переход в `/etc` открывает `/run/host/etc` — каталог хоста (есть `apt`, `passwd`); F3 на файле там показывает его, Enter открывает его программой хоста.
@@ -2282,7 +2282,7 @@ mkdir -p /tmp/fp && echo text > /tmp/fp/a.txt && printf '\x7fELF' > /tmp/fp/bin
 8. «О программе».
 - [ ] Нет кнопки «Проверить обновления», и при запуске окно обновления не появляется.
 
-Уборка: `rm -r /tmp/fp; flatpak uninstall --user io.github.shagovAlexei.cosmic-ext-shagoff-commander`.
+Уборка: `rm -r /tmp/fp; flatpak uninstall --user io.github.shagovalexei.shagoff-commander`.
 
 ### Новый APP_ID (0.138.0)
 
@@ -2322,7 +2322,7 @@ just flatpak
 for b in $(cargo test --workspace --no-run --message-format=json 2>/dev/null \
     | python3 -c 'import json,sys;[print(m["executable"]) for m in map(json.loads,sys.stdin) if m.get("executable") and m["profile"]["test"]]'); do
   case $b in *shagoff_commander*) c=crates/app;; *) c=crates/core;; esac
-  flatpak run --cwd=$PWD/$c --command=$b io.github.shagovAlexei.cosmic-ext-shagoff-commander --test-threads=4 2>&1 | grep -E '^test result|FAILED'
+  flatpak run --cwd=$PWD/$c --command=$b io.github.shagovalexei.shagoff-commander --test-threads=4 2>&1 | grep -E '^test result|FAILED'
 done
 ```
 
@@ -2349,7 +2349,7 @@ mkdir -p /tmp/fpc/sub && cd /tmp/fpc
 echo hello > a.txt && cp a.txt b.txt && seq 1 100000 > big.txt
 zip -q -P 123 secret.zip a.txt && zip -q plain.zip a.txt b.txt && zip -q outer.zip plain.zip
 cp /usr/share/doc/*/copyright sub/ 2>/dev/null; ls /usr/share/backgrounds/*/* 2>/dev/null | head -3 | xargs -r cp -t sub/
-flatpak run io.github.shagovAlexei.cosmic-ext-shagoff-commander
+flatpak run io.github.shagovalexei.shagoff-commander
 ```
 Перед этим закрыть .deb-версию: настройки у них общие.
 
@@ -2403,7 +2403,7 @@ flatpak run io.github.shagovAlexei.cosmic-ext-shagoff-commander
 - [ ] В «О программе» и `flatpak list` — текущая версия (до 0.139.3 — 0.138.0); нет «Проверить обновления», при старте окно обновления не появляется.
 - [ ] Ctrl+, → язык English — меню по-английски, обратно — по-русски.
 
-Уборка: `rm -r /tmp/fpc; flatpak uninstall --user io.github.shagovAlexei.cosmic-ext-shagoff-commander` (если flatpak больше не нужен).
+Уборка: `rm -r /tmp/fpc; flatpak uninstall --user io.github.shagovalexei.shagoff-commander` (если flatpak больше не нужен).
 
 ### Дата в имени архива (0.140.0, 219)
 
@@ -2470,7 +2470,7 @@ convert -size 64x64 xc:orange /tmp/up.jpg
 
 ### Облака: пробный период и ключ (0.143.0, 0.144.0)
 
-Подготовка: свой ключ — `just access-key ваш@адрес` (спросит пароль ключа выпусков), скопируй напечатанную строку. Копия настроек: `cp -a ~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander ~/cfg-backup`.
+Подготовка: свой ключ — `just access-key ваш@адрес` (спросит пароль ключа выпусков), скопируй напечатанную строку. Копия настроек: `cp -a ~/.config/cosmic/io.github.shagovalexei.shagoff-commander ~/cfg-backup`.
 
 Шаги:
 1. Ctrl+, → «Облака».
@@ -2478,7 +2478,7 @@ convert -size 64x64 xc:orange /tmp/up.jpg
 - [ ] Справка → О программе, под версией: та же строка, пустое поле «Ключ Pro» и кнопка «Купить Pro»; на окне 1036×530 всё видно после прокрутки, кнопки не обрезаны.
 2. Нажми «Купить Pro» (в настройках и в «О программе»).
 - [ ] В браузере открылась страница оплаты Stripe.
-3. Подключи любое облако кнопкой диска; закрой программу. Посмотри `~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander/v1/cloud_trial`.
+3. Подключи любое облако кнопкой диска; закрой программу. Посмотри `~/.config/cosmic/io.github.shagovalexei.shagoff-commander/v1/cloud_trial`.
 - [ ] Там число (время начала пробного периода), не 0.
 4. Отключи облако, закрой программу, `echo 1 > …/v1/cloud_trial`, запусти, Ctrl+, → «Облака».
 - [ ] «Облака: бесплатный месяц закончился».
@@ -2488,7 +2488,7 @@ convert -size 64x64 xc:orange /tmp/up.jpg
 6. Очисти поле и вставь (Ctrl+V) строку из подготовки.
 - [x] Вместо поля и кнопки строка «Shagoff Commander Pro: ваш@адрес»; в Настройки → Облака — то же; облака снова подключаются. *(проверено автором, 14.11.2026)*
 
-Уборка: `rm -r ~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander && mv ~/cfg-backup ~/.config/cosmic/io.github.shagovAlexei.cosmic-ext-shagoff-commander` (или оставь свой ключ).
+Уборка: `rm -r ~/.config/cosmic/io.github.shagovalexei.shagoff-commander && mv ~/cfg-backup ~/.config/cosmic/io.github.shagovalexei.shagoff-commander` (или оставь свой ключ).
 
 ### Архивы только для чтения: rar, iso, deb, rpm, cab (0.145.0, 225)
 
@@ -2779,3 +2779,25 @@ glxinfo -B | grep -E "Device|Max core"   # OpenGL 3.3 или ниже
 - [ ] У окна просмотра на панели задач тот же значок.
 
 Уборка: не нужна.
+
+### Новый ID приложения (0.157.0)
+
+Проверяет перенос настроек со старого ID и установку под новым именем.
+
+Подготовка (сохранить свои настройки на время проверки):
+```sh
+cp -a ~/.config/cosmic ~/cfg-cosmic-backup && cp -a ~/.local/state/cosmic ~/state-cosmic-backup
+ls ~/.config/cosmic ~/.local/state/cosmic | grep -i shagoff   # сейчас: io.github.shagovAlexei.cosmic-ext-shagoff-commander
+```
+Шаги и что должно быть:
+1. Поставить .deb 0.157.0 (`sudo apt install ./shagoff-commander_0.157.0_amd64.deb`) и запустить из меню.
+- [ ] В меню один пункт «Shagoff Commander» со своим значком; `ls /usr/share/applications | grep shagoff` — только `io.github.shagovalexei.shagoff-commander.desktop`.
+- [ ] Вкладки, скрытые файлы, тема — как были.
+- [ ] `ls ~/.config/cosmic ~/.local/state/cosmic | grep -i shagoff` — только `io.github.shagovalexei.shagoff-commander`.
+2. В COSMIC: значок в доке у запущенной программы — наш (если программа была закреплена в доке под старым именем, закрепить заново).
+3. Справка → О программе: ссылки ведут на `github.com/shagovAlexei/shagoff-commander`.
+4. Старый ID постарше: закрыть программу, `mv ~/.config/cosmic/io.github.shagovalexei.shagoff-commander ~/.config/cosmic/io.github.shagovAlexei.cosmic-shagoff-commander`, запустить.
+- [ ] Настройки на месте, каталог снова под новым ID.
+
+Уборка: `rm -rf ~/.config/cosmic ~/.local/state/cosmic && mv ~/cfg-cosmic-backup ~/.config/cosmic && mv ~/state-cosmic-backup ~/.local/state/cosmic` — вернёт прежние каталоги, программа при следующем запуске перенесёт их снова.
+
