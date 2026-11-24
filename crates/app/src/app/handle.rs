@@ -1228,6 +1228,23 @@ impl App {
                     l.dragging = true;
                 }
             }
+            Message::ListerMdPress(block, at) => {
+                if let Some(l) = &mut self.lister {
+                    match &mut l.sel {
+                        Some(s) if self.mods.shift() => s.head = (block, at),
+                        _ => l.sel = Some(shagoff_core::lister::Selection::new((block, at))),
+                    }
+                    l.dragging = true;
+                }
+            }
+            Message::ListerMdDrag(block, at) => {
+                if let Some(l) = &mut self.lister
+                    && l.dragging
+                    && let Some(s) = &mut l.sel
+                {
+                    s.head = (block, at);
+                }
+            }
             Message::ListerRelease => {
                 if let Some(l) = &mut self.lister {
                     l.dragging = false;

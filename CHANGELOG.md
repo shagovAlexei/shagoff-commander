@@ -2,6 +2,10 @@
 
 Restored from the merged pull requests and tags (the GitHub releases older than the newest five are deleted by CI; see `.github/workflows/release.yml`). Newest first. Add an entry here in every PR that bumps the version.
 
+## 0.158.0 — 2026-11-24
+
+- F3, Markdown view: text is selected with the mouse, across paragraphs, headings, list items and code lines (Shift+click extends); Ctrl+A selects all, Ctrl+C copies, as in the text view. Code blocks are in the monospace font
+
 ## 0.157.0 — 2026-11-24
 
 - New app ID `io.github.shagovalexei.shagoff-commander`, without `cosmic-ext-`; the repository is now `github.com/shagovAlexei/shagoff-commander` (the old address leads there). Settings and tabs move over by themselves, from either earlier ID; the menu entry and its icon are installed under the new name, in System → File Tools

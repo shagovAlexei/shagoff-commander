@@ -58,6 +58,9 @@
     <color type="primary" scheme_preference="dark">#1d4a57</color>
   </branding>
   <releases>
+    <release version="0.158.0" date="2026-11-24">
+      <description><p>Viewer: text in the Markdown view can be selected and copied.</p></description>
+    </release>
     <release version="0.157.0" date="2026-11-24">
       <description><p>New app ID io.github.shagovalexei.shagoff-commander and repository name shagoff-commander; settings and tabs move over by themselves.</p></description>
     </release>
